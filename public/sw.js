@@ -9,15 +9,18 @@ const reFetch =  async (newUrl) => {
 
   return fetch(newUrl)
 }
-const isSupportWebp = () => {
-  return window.document.createElement('canvas').toDataURL('image/webp', 0.5).indexOf('data:image/webp') === 0
+const isSupportWebp = (request) => {
+  debugger
+  return request.headers.get('accept').includes('webp')
 }
 
 const fixWebp = async ({ event }) => {
   const { request } = event
-  if (isSupportWebp()) {
+  if (!isSupportWebp(request)) {
+    debugger
     event.respondWith(fetch(request))
   } else {
+    debugger
     event.respondWith(reFetch(request.url.replace('png', 'webp')))
   }
 }
